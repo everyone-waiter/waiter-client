@@ -1,31 +1,15 @@
-import React from 'react';
-import { SWRConfig } from 'swr';
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer, toast } from 'react-toastify';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Waiting } from './pages/waiting';
 
 function App() {
   return (
-    <SWRConfig
-      value={{
-        onError: (error) => {
-          toast.error(error.message);
-        },
-      }}
-    >
-      <div className="App"></div>;
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
-    </SWRConfig>
+    <div className="container col-xl-10 col-xxl-8 px-4 py-5">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Waiting />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 
