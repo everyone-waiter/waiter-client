@@ -1,6 +1,36 @@
+import useSWR from 'swr';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
+import { useNavigate, useParams } from 'react-router-dom';
+import { AppSpinner } from '../../components/AppSpinner';
+
+const fetcher = async (url: string) => {
+  try {
+    const res = await axios.get(url);
+    return res.data;
+  } catch (e: any) {
+    const error = new Error(e.response.message);
+    error.code = e.response.status;
+    throw error;
+  }
+};
 
 export function Waiting() {
+  const { memberId } = useParams();
+  const navigate = useNavigate();
+  const [isMounted, setMounted] = useState(false);
+  const { data, isLoading } = useSWR(isMounted ? `/waiting/${memberId}` : null, fetcher);
+
+  useEffect(() => {
+    if (!memberId || memberId?.length !== 36) return navigate('/');
+    setMounted(true);
+  }, [memberId, navigate]);
+
+  if (isLoading) return <AppSpinner />;
+
+  console.log(data);
+
   return (
     <Row lg={5} className="align-items-center py-5">
       <Col lg={7} className="text-center text-lg-start">
