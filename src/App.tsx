@@ -1,4 +1,4 @@
-import { Waiting } from './pages/waiting';
+import { Waiting, Turn } from './pages/waiting';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -7,6 +7,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/waiting/:memberId" element={<Waiting />} />
+          <Route path="/waiting/turn/:waitingId" element={<Turn />} />
         </Routes>
       </BrowserRouter>
     </div>

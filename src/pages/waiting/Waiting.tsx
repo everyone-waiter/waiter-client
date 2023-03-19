@@ -5,7 +5,7 @@ import { BaseSyntheticEvent, useEffect, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppSpinner } from '../../components/AppSpinner';
-import { WaitingCountResponse, WaitingRequest } from '../../types/Waiting';
+import { WaitingCountResponse, WaitingRequest } from '../../types/waiting';
 
 const fetcher = async (url: string) => {
   try {
