@@ -1,5 +1,6 @@
-import { Waiting, Turn } from './pages/waiting';
+import { Waiting, Turn, Cancel } from './pages/waiting';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { NotFound } from './pages/NotFound';
 
 function App() {
   return (
@@ -8,6 +9,8 @@ function App() {
         <Routes>
           <Route path="/waiting/:memberId" element={<Waiting />} />
           <Route path="/waiting/turn/:waitingId" element={<Turn />} />
+          <Route path="/waiting/:memberId/cancel/:waitingId" element={<Cancel />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </div>

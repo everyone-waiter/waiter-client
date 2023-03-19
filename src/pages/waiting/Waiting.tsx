@@ -6,6 +6,7 @@ import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppSpinner } from '../../components/AppSpinner';
 import { WaitingCountResponse, WaitingRequest } from '../../types/waiting';
+import { toast } from 'react-toastify';
 
 const fetcher = async (url: string) => {
   try {
@@ -51,7 +52,10 @@ export function Waiting() {
   const { mutate } = useSWRConfig();
 
   useEffect(() => {
-    if (!memberId || memberId?.length !== 36) return navigate('/');
+    if (!memberId || memberId?.length !== 36) {
+      toast.error('잘못된 접근입니다.');
+      return navigate('/');
+    }
     setMounted(true);
   }, [memberId, navigate]);
 

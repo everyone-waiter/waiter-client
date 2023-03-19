@@ -4,6 +4,7 @@ import { WaitingResponse } from '../../types/waiting';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppSpinner } from '../../components/AppSpinner';
+import { toast } from 'react-toastify';
 
 const fetcher = async (url: string) => {
   try {
@@ -21,7 +22,10 @@ export function Turn() {
   const { data, isLoading } = useSWR<WaitingResponse>(isMounted ? `/waiting/turn/${waitingId}` : null, fetcher);
 
   useEffect(() => {
-    if (!waitingId || waitingId?.length !== 36) return navigate('/');
+    if (!waitingId || waitingId?.length !== 36) {
+      toast.error('잘못된 접근입니다.');
+      return navigate('/');
+    }
     setMounted(true);
   }, [waitingId, navigate]);
 

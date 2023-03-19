@@ -12,8 +12,14 @@ root.render(
     <SWRConfig
       value={{
         onError: (error) => {
+          console.log(error);
           toast.error(error.response.data);
+
+          if (error.response.status === 404) {
+            window.location.replace('/notfound');
+          }
         },
+        errorRetryCount: 0,
       }}
     >
       <App />
