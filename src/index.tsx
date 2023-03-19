@@ -12,7 +12,7 @@ root.render(
     <SWRConfig
       value={{
         onError: (error) => {
-          toast.error(error.message);
+          toast.error(error.response.data);
         },
       }}
     >
