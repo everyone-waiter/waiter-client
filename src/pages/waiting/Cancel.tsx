@@ -43,7 +43,7 @@ export function Cancel() {
       };
     }
     setMounted(true);
-  }, [waitingId, navigate]);
+  }, [waitingId, navigate, memberId]);
 
   const onChange = (e: BaseSyntheticEvent) => {
     setValidUserInput(Number(e.target.value) !== data?.waitingNumber);
