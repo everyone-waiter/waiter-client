@@ -1,4 +1,4 @@
-import { Waiting, Turn, Cancel } from './pages/waiting';
+import { Waiting, Turn, Cancel, Admin } from './pages/waiting';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { NotFound } from './pages/NotFound';
 
@@ -9,7 +9,8 @@ function App() {
         <Routes>
           <Route path="/waiting/:memberId" element={<Waiting />} />
           <Route path="/waiting/turn/:waitingId" element={<Turn />} />
-          <Route path="/waiting/:memberId/cancel/:waitingId" element={<Cancel />} />
+          <Route path="/waiting/cancel/:waitingId" element={<Cancel />} />
+          <Route path="/waiting/admin/:memberId" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

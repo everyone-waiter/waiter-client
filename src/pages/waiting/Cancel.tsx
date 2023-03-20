@@ -29,26 +29,23 @@ const cancelFetcher = async (url: string) => {
 };
 
 export function Cancel() {
-  const { memberId, waitingId } = useParams();
+  const { waitingId } = useParams();
   const navigate = useNavigate();
   const [isMounted, setMounted] = useState(false);
-  const [userInput, setUserInput] = useState(-1);
-  const { trigger, isMutating } = useSWRMutation(`/waiting/${memberId}/cancel/${waitingId}`, cancelFetcher);
-  const { data, isLoading } = useSWR<WaitingResponse>(
-    isMounted ? `/waiting/${memberId}/cancel/${waitingId}` : null,
-    fetcher,
-  );
+  const [validUserInput, setValidUserInput] = useState(true);
+  const { trigger, isMutating } = useSWRMutation(`/waiting/cancel/${waitingId}`, cancelFetcher);
+  const { data, isLoading } = useSWR<WaitingResponse>(isMounted ? `/waiting/cancel/${waitingId}` : null, fetcher);
 
   useEffect(() => {
-    if (!memberId || memberId?.length !== 36 || !waitingId || waitingId?.length !== 36) {
+    if (!waitingId || waitingId?.length !== 36) {
       toast.error('잘못된 접근입니다.');
       return navigate('/');
     }
     setMounted(true);
-  }, [waitingId, navigate, memberId]);
+  }, [waitingId, navigate]);
 
   const onChange = (e: BaseSyntheticEvent) => {
-    setUserInput(e.target.value);
+    setValidUserInput(Number(e.target.value) !== data?.waitingNumber);
   };
 
   const onClick = async (e: BaseSyntheticEvent) => {
@@ -85,7 +82,7 @@ export function Cancel() {
             size="lg"
             className="px-4 me-sm-3"
             onClick={onClick}
-            disabled={isMutating || userInput !== data?.waitingNumber}
+            disabled={isMutating || validUserInput}
           >
             {isMutating ? (
               <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
