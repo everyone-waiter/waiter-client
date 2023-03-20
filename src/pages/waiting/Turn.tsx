@@ -23,10 +23,12 @@ export function Turn() {
   if (isLoading) return <AppSpinner />;
 
   return (
-    <div className="px-4 pt-5 my-5 text-center border-bottom">
-      <h1 className="display-4 fw-bold">대기번호 : {data?.waitingNumber}번</h1>
-      <div className="col-lg-6 mx-auto">
-        <h2 className="lead mb-4">내 앞 대기팀 : {data?.waitingTurn}팀</h2>
+    <div className="container col-xl-10 col-xxl-8 px-4 py-5">
+      <div className="px-4 pt-5 my-5 text-center border-bottom">
+        <h1 className="display-4 fw-bold">대기번호 : {data?.waitingNumber}번</h1>
+        <div className="col-lg-6 mx-auto">
+          <h2 className="lead mb-4">내 앞 대기팀 : {data?.waitingTurn}팀</h2>
+        </div>
       </div>
     </div>
   );
