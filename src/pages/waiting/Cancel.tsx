@@ -25,8 +25,8 @@ export function Cancel() {
   const navigate = useNavigate();
   const [isMounted, setMounted] = useState(false);
   const [validUserInput, setValidUserInput] = useState(true);
-  const { trigger, isMutating } = useSWRMutation(`/waiting/cancel/${waitingId}`, cancelFetcher);
-  const { data, isLoading } = useSWR<WaitingResponse>(isMounted ? `/waiting/cancel/${waitingId}` : null, fetcher);
+  const { trigger, isMutating } = useSWRMutation(`/api/waiting/cancel/${waitingId}`, cancelFetcher);
+  const { data, isLoading } = useSWR<WaitingResponse>(isMounted ? `/api/waiting/cancel/${waitingId}` : null, fetcher);
 
   useEffect(() => {
     if (!waitingId || waitingId?.length !== 36) {

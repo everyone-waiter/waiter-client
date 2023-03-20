@@ -10,7 +10,7 @@ export function Turn() {
   const { waitingId } = useParams();
   const navigate = useNavigate();
   const [isMounted, setMounted] = useState(false);
-  const { data, isLoading } = useSWR<WaitingResponse>(isMounted ? `/waiting/turn/${waitingId}` : null, fetcher);
+  const { data, isLoading } = useSWR<WaitingResponse>(isMounted ? `/api/waiting/turn/${waitingId}` : null, fetcher);
 
   useEffect(() => {
     if (!waitingId || waitingId?.length !== 36) {

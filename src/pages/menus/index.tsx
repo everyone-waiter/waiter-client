@@ -11,7 +11,7 @@ export function MenuForm() {
   const { memberId } = useParams();
   const [categoryId, setCategoryId] = useState<number>(0);
   const { data: categoryList, isLoading: categoryIsLoading } = useSWRImmutable<CategoryResponse[]>(
-    `/categories/${memberId}`,
+    `/api/categories/${memberId}`,
     fetcher,
   );
 

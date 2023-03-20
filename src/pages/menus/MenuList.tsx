@@ -9,7 +9,7 @@ import { ShowMenuList } from './ShowMenuList';
 export function MenuList({ categoryId }: { categoryId: number }) {
   const [isMounted, setIsMounted] = useState(false);
   const { data, isLoading } = useSWRImmutable<MenuResponse[]>(
-    isMounted ? `/menus/category/${categoryId}` : null,
+    isMounted ? `/api/menus/category/${categoryId}` : null,
     fetcher,
   );
 

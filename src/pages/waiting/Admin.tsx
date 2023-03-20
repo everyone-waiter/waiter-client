@@ -35,14 +35,14 @@ export function Admin() {
   const { memberId } = useParams();
   const [isMounted, setMounted] = useState(false);
   const { trigger: noticeTrigger, isMutating: noticeMutating } = useSWRMutation(
-    `/waiting/admin/notice/`,
+    `/api/waiting/admin/notice/`,
     noticeFetcher,
   );
   const { trigger: deleteTrigger, isMutating: deleteMutating } = useSWRMutation(
-    `/waiting/admin/delete/`,
+    `/api/waiting/admin/delete/`,
     deleteFetcher,
   );
-  const { data, isLoading } = useSWR<WaitingResponse[]>(isMounted ? `/waiting/admin/${memberId}` : null, fetcher);
+  const { data, isLoading } = useSWR<WaitingResponse[]>(isMounted ? `/api/waiting/admin/${memberId}` : null, fetcher);
 
   useEffect(() => {
     if (!memberId || memberId?.length !== 36) {

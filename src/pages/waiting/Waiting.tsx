@@ -39,8 +39,8 @@ export function Waiting() {
     phoneNumber: '',
     state: false,
   });
-  const { data, isLoading } = useSWR<WaitingCountResponse>(isMounted ? `/waiting/${memberId}` : null, fetcher);
-  const { trigger, isMutating } = useSWRMutation(`/waiting/${memberId}`, sendPost);
+  const { data, isLoading } = useSWR<WaitingCountResponse>(isMounted ? `/api/waiting/${memberId}` : null, fetcher);
+  const { trigger, isMutating } = useSWRMutation(`/api/waiting/${memberId}`, sendPost);
   const { mutate } = useSWRConfig();
 
   useEffect(() => {
