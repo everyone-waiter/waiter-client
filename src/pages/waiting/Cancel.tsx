@@ -37,7 +37,7 @@ export function Cancel() {
     }
 
     if (!ws.current) {
-      ws.current = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL + `/${memberId}/websocket`);
+      ws.current = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL + `/${memberId}`);
       ws.current.onopen = () => {
         setOpenSocket(true);
       };
