@@ -7,15 +7,7 @@ import { AppSpinner } from '../../components/AppSpinner';
 import axios from 'axios';
 import { Button, Form } from 'react-bootstrap';
 import useSWRMutation from 'swr/mutation';
-
-const fetcher = async (url: string) => {
-  try {
-    const res = await axios.get(url, { headers: { 'Content-Type': `application/json` } });
-    return res.data;
-  } catch (e: any) {
-    throw e;
-  }
-};
+import { fetcher } from '../../utils/fetcher';
 
 const cancelFetcher = async (url: string) => {
   try {

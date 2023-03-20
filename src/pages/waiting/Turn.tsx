@@ -1,19 +1,10 @@
-import axios from 'axios';
 import useSWR from 'swr';
 import { WaitingResponse } from '../../types/waiting';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppSpinner } from '../../components/AppSpinner';
 import { toast } from 'react-toastify';
-
-const fetcher = async (url: string) => {
-  try {
-    const res = await axios.get(url, { headers: { 'Content-Type': `application/json` } });
-    return res.data;
-  } catch (e: any) {
-    throw e;
-  }
-};
+import { fetcher } from '../../utils/fetcher';
 
 export function Turn() {
   const { waitingId } = useParams();

@@ -6,15 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { AppSpinner } from '../../components/AppSpinner';
 import useSWRMutation from 'swr/mutation';
-
-const fetcher = async (url: string) => {
-  try {
-    const res = await axios.get(url, { headers: { 'Content-Type': `application/json` } });
-    return res.data;
-  } catch (e: any) {
-    throw e;
-  }
-};
+import { fetcher } from '../../utils/fetcher';
 
 const deleteFetcher = async (url: string, { arg }: { arg: string }) => {
   try {

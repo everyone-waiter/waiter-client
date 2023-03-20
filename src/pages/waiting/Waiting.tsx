@@ -7,15 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AppSpinner } from '../../components/AppSpinner';
 import { WaitingCountResponse, WaitingRequest } from '../../types/waiting';
 import { toast } from 'react-toastify';
-
-const fetcher = async (url: string) => {
-  try {
-    const res = await axios.get(url, { headers: { 'Content-Type': `application/json` } });
-    return res.data;
-  } catch (e: any) {
-    throw e;
-  }
-};
+import { fetcher } from '../../utils/fetcher';
 
 const sendPost = async (url: string, { arg }: { arg: WaitingRequest }) => {
   const bodyData = JSON.stringify(arg);
