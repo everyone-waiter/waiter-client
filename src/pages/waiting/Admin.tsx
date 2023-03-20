@@ -1,12 +1,12 @@
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import { WaitingResponse } from '../../types/waiting';
-import { BaseSyntheticEvent, useEffect, useState } from 'react';
+import { BaseSyntheticEvent, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { AppSpinner } from '../../components/AppSpinner';
 import useSWRMutation from 'swr/mutation';
-import { fetcher } from '../../utils/fetcher';
+import { fetcher, onMessage } from '../../utils/fetcher';
 
 const deleteFetcher = async (url: string, { arg }: { arg: string }) => {
   try {
@@ -34,6 +34,7 @@ export function Admin() {
   const navigate = useNavigate();
   const { memberId } = useParams();
   const [isMounted, setMounted] = useState(false);
+  const [openSocket, setOpenSocket] = useState(false);
   const { trigger: noticeTrigger, isMutating: noticeMutating } = useSWRMutation(
     `/api/waiting/admin/notice/`,
     noticeFetcher,
@@ -43,19 +44,34 @@ export function Admin() {
     deleteFetcher,
   );
   const { data, isLoading } = useSWR<WaitingResponse[]>(isMounted ? `/api/waiting/admin/${memberId}` : null, fetcher);
+  let ws = useRef<WebSocket | null>(null);
+  const { mutate } = useSWRConfig();
 
   useEffect(() => {
     if (!memberId || memberId?.length !== 36) {
       toast.error('잘못된 접근입니다.');
       return navigate('/');
     }
+
+    if (!ws.current) {
+      ws.current = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL + `/${memberId}`);
+      ws.current.onopen = () => {
+        setOpenSocket(true);
+      };
+      ws.current.onmessage = (ev) => onMessage(ev, mutate, `/api/waiting/admin/${memberId}`);
+    }
+
     setMounted(true);
-  }, [memberId, navigate]);
+  }, [memberId, navigate, mutate]);
 
   const onClickDelete = async (e: BaseSyntheticEvent, waitingId: string) => {
     e.preventDefault();
     if (window.confirm('삭제하시겠습니까?')) {
       await deleteTrigger(waitingId);
+
+      if (openSocket) {
+        ws.current?.send('refresh');
+      }
       alert(`삭제가 완료되었습니다.`);
     }
   };

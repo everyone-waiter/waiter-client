@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { BaseSyntheticEvent, useEffect, useState } from 'react';
+import { BaseSyntheticEvent, useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 import { WaitingResponse } from '../../types/waiting';
 import { toast } from 'react-toastify';
@@ -21,17 +21,26 @@ const cancelFetcher = async (url: string) => {
 };
 
 export function Cancel() {
-  const { waitingId } = useParams();
+  const { memberId, waitingId } = useParams();
   const navigate = useNavigate();
   const [isMounted, setMounted] = useState(false);
   const [validUserInput, setValidUserInput] = useState(true);
+  const [openSocket, setOpenSocket] = useState(false);
   const { trigger, isMutating } = useSWRMutation(`/api/waiting/cancel/${waitingId}`, cancelFetcher);
   const { data, isLoading } = useSWR<WaitingResponse>(isMounted ? `/api/waiting/cancel/${waitingId}` : null, fetcher);
+  let ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     if (!waitingId || waitingId?.length !== 36) {
       toast.error('잘못된 접근입니다.');
       return navigate('/');
+    }
+
+    if (!ws.current) {
+      ws.current = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL + `/${memberId}`);
+      ws.current.onopen = () => {
+        setOpenSocket(true);
+      };
     }
     setMounted(true);
   }, [waitingId, navigate]);
@@ -43,6 +52,9 @@ export function Cancel() {
   const onClick = async (e: BaseSyntheticEvent) => {
     e.preventDefault();
     await trigger();
+    if (openSocket) {
+      ws.current?.send('refresh');
+    }
     alert(`대기 취소가 완료되었습니다.`);
     window.location.href = `kakaotalk://inappbrowser/close`;
   };

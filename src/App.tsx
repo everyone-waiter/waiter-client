@@ -9,7 +9,7 @@ function App() {
       <Routes>
         <Route path="/waiting/:memberId" element={<Waiting />} />
         <Route path="/waiting/turn/:waitingId" element={<Turn />} />
-        <Route path="/waiting/cancel/:waitingId" element={<Cancel />} />
+        <Route path="/waiting/:memberId/cancel/:waitingId" element={<Cancel />} />
         <Route path="/waiting/admin/:memberId" element={<Admin />} />
         <Route path="/menus/:memberId" element={<MenuForm />} />
         <Route path="*" element={<NotFound />} />

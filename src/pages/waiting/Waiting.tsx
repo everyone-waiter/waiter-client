@@ -1,13 +1,13 @@
 import useSWR, { useSWRConfig } from 'swr';
 import useSWRMutation from 'swr/mutation';
 import axios from 'axios';
-import { BaseSyntheticEvent, useEffect, useState } from 'react';
+import { BaseSyntheticEvent, useEffect, useRef, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppSpinner } from '../../components/AppSpinner';
 import { WaitingCountResponse, WaitingRequest } from '../../types/waiting';
 import { toast } from 'react-toastify';
-import { fetcher } from '../../utils/fetcher';
+import { fetcher, onMessage } from '../../utils/fetcher';
 
 const sendPost = async (url: string, { arg }: { arg: WaitingRequest }) => {
   const bodyData = JSON.stringify(arg);
@@ -32,6 +32,7 @@ export function Waiting() {
   const { memberId } = useParams();
   const navigate = useNavigate();
   const [isMounted, setMounted] = useState(false);
+  const [openSocket, setOpenSocket] = useState(false);
   const [reqData, setReqData] = useState(formData);
   const [validError, setValidError] = useState({
     adult: '',
@@ -42,14 +43,24 @@ export function Waiting() {
   const { data, isLoading } = useSWR<WaitingCountResponse>(isMounted ? `/api/waiting/${memberId}` : null, fetcher);
   const { trigger, isMutating } = useSWRMutation(`/api/waiting/${memberId}`, sendPost);
   const { mutate } = useSWRConfig();
+  let ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     if (!memberId || memberId?.length !== 36) {
       toast.error('잘못된 접근입니다.');
       return navigate('/');
     }
+
+    if (!ws.current) {
+      ws.current = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL + `/${memberId}`);
+      ws.current.onopen = () => {
+        setOpenSocket(true);
+      };
+      ws.current.onmessage = (ev) => onMessage(ev, mutate, `/api/waiting/${memberId}`);
+    }
+
     setMounted(true);
-  }, [memberId, navigate]);
+  }, [memberId, navigate, mutate]);
 
   const onChange = (e: BaseSyntheticEvent) => {
     setReqData((cur) => ({ ...cur, [e.target.name]: e.target.value }));
@@ -72,6 +83,9 @@ export function Waiting() {
 
     await trigger(reqData);
     await mutate(`/waiting/${memberId}`);
+    if (openSocket) {
+      ws.current?.send('refresh');
+    }
     setReqData(formData);
     alert(`대기열 등록이 완료되었습니다.\n카카오톡을 확인 해 주세요.`);
   };
