@@ -70,7 +70,7 @@ export function Admin() {
       await deleteTrigger(waitingId);
 
       if (openSocket) {
-        ws.current?.send('refresh');
+        ws.current?.send(JSON.stringify({ memberId, message: 'refresh' }));
       }
       alert(`삭제가 완료되었습니다.`);
     }

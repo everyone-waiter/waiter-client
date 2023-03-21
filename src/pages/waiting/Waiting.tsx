@@ -84,7 +84,7 @@ export function Waiting() {
     await trigger(reqData);
     await mutate(`/waiting/${memberId}`);
     if (openSocket) {
-      ws.current?.send('refresh');
+      ws.current?.send(JSON.stringify({ memberId, message: 'refresh' }));
     }
     setReqData(formData);
     alert(`대기열 등록이 완료되었습니다.\n카카오톡을 확인 해 주세요.`);

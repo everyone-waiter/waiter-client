@@ -53,7 +53,7 @@ export function Cancel() {
     e.preventDefault();
     await trigger();
     if (openSocket) {
-      ws.current?.send('refresh');
+      ws.current?.send(JSON.stringify({ memberId, message: 'refresh' }));
     }
     alert(`대기 취소가 완료되었습니다.`);
     window.location.href = `kakaotalk://inappbrowser/close`;
