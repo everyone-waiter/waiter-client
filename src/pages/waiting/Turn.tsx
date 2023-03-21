@@ -25,10 +25,16 @@ export function Turn() {
   return (
     <div className="container col-xl-10 col-xxl-8 px-4 py-5">
       <div className="px-4 pt-5 my-5 text-center border-bottom">
-        <h1 className="display-4 fw-bold">대기번호 : {data?.waitingNumber}번</h1>
-        <div className="col-lg-6 mx-auto">
-          <h2 className="lead mb-4">내 앞 대기팀 : {data?.waitingTurn}팀</h2>
-        </div>
+        {data?.waitingTurn !== -1 ? (
+          <>
+            <h1 className="display-4 fw-bold">대기번호 : {data?.waitingNumber}번</h1>
+            <div className="col-lg-6 mx-auto">
+              <h2 className="lead mb-4">내 앞 대기팀 : {data?.waitingTurn}팀</h2>
+            </div>
+          </>
+        ) : (
+          <h1 className="display-4 fw-bold">입장이 완료되었거나 취소된 대기 번호 입니다.</h1>
+        )}
       </div>
     </div>
   );
