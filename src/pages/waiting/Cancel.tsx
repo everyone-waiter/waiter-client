@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { BaseSyntheticEvent, useEffect, useRef, useState } from 'react';
+import { BaseSyntheticEvent, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { WaitingResponse } from '../../types/waiting';
 import { toast } from 'react-toastify';
@@ -8,7 +8,6 @@ import axios from 'axios';
 import { Button, Form } from 'react-bootstrap';
 import useSWRMutation from 'swr/mutation';
 import { fetcher } from '../../utils/fetcher';
-import SockJS from 'sockjs-client';
 
 const cancelFetcher = async (url: string) => {
   try {
@@ -26,10 +25,8 @@ export function Cancel() {
   const navigate = useNavigate();
   const [isMounted, setMounted] = useState(false);
   const [validUserInput, setValidUserInput] = useState(true);
-  const [openSocket, setOpenSocket] = useState(false);
   const { trigger, isMutating } = useSWRMutation(`/api/waiting/cancel/${waitingId}`, cancelFetcher);
   const { data, isLoading } = useSWR<WaitingResponse>(isMounted ? `/api/waiting/cancel/${waitingId}` : null, fetcher);
-  let ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     if (!waitingId || waitingId?.length !== 36) {
@@ -37,13 +34,6 @@ export function Cancel() {
       return navigate('/');
     }
 
-    if (!ws.current) {
-      // new WebSocket(process.env.REACT_APP_WEBSOCKET_URL + `/${memberId}`);
-      ws.current = new SockJS(`/ws/waiting/${memberId}`);
-      ws.current.onopen = () => {
-        setOpenSocket(true);
-      };
-    }
     setMounted(true);
   }, [waitingId, navigate, memberId]);
 
@@ -54,9 +44,6 @@ export function Cancel() {
   const onClick = async (e: BaseSyntheticEvent) => {
     e.preventDefault();
     await trigger();
-    if (openSocket) {
-      ws.current?.send(JSON.stringify({ memberId, message: 'refresh' }));
-    }
     alert(`대기 취소가 완료되었습니다.`);
     window.location.href = `kakaotalk://inappbrowser/close`;
   };

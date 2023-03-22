@@ -11,6 +11,7 @@ root.render(
   <React.StrictMode>
     <SWRConfig
       value={{
+        refreshInterval: 5000,
         onError: (error) => {
           toast.error(error.response.data);
 
