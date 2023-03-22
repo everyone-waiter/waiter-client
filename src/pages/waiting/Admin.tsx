@@ -7,6 +7,7 @@ import axios from 'axios';
 import { AppSpinner } from '../../components/AppSpinner';
 import useSWRMutation from 'swr/mutation';
 import { fetcher, onMessage } from '../../utils/fetcher';
+import SockJS from 'sockjs-client';
 
 const deleteFetcher = async (url: string, { arg }: { arg: string }) => {
   try {
@@ -54,7 +55,8 @@ export function Admin() {
     }
 
     if (!ws.current) {
-      ws.current = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL + `/${memberId}`);
+      ws.current = new SockJS(`/ws/waiting/${memberId}`);
+      // ws.current = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL + `/${memberId}`);
       ws.current.onopen = () => {
         setOpenSocket(true);
       };

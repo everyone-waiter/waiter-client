@@ -8,6 +8,7 @@ import { AppSpinner } from '../../components/AppSpinner';
 import { WaitingCountResponse, WaitingRequest } from '../../types/waiting';
 import { toast } from 'react-toastify';
 import { fetcher, onMessage } from '../../utils/fetcher';
+import SockJS from 'sockjs-client';
 
 const sendPost = async (url: string, { arg }: { arg: WaitingRequest }) => {
   const bodyData = JSON.stringify(arg);
@@ -52,7 +53,8 @@ export function Waiting() {
     }
 
     if (!ws.current) {
-      ws.current = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL + `/${memberId}`);
+      // ws.current = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL + `/${memberId}`);
+      ws.current = new SockJS(`/ws/waiting/${memberId}`);
       ws.current.onopen = () => {
         setOpenSocket(true);
       };

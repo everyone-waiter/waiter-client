@@ -8,6 +8,7 @@ import axios from 'axios';
 import { Button, Form } from 'react-bootstrap';
 import useSWRMutation from 'swr/mutation';
 import { fetcher } from '../../utils/fetcher';
+import SockJS from 'sockjs-client';
 
 const cancelFetcher = async (url: string) => {
   try {
@@ -37,7 +38,8 @@ export function Cancel() {
     }
 
     if (!ws.current) {
-      ws.current = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL + `/${memberId}`);
+      // new WebSocket(process.env.REACT_APP_WEBSOCKET_URL + `/${memberId}`);
+      ws.current = new SockJS(`/ws/waiting/${memberId}`);
       ws.current.onopen = () => {
         setOpenSocket(true);
       };
