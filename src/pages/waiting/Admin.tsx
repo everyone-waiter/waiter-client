@@ -7,6 +7,7 @@ import axios from 'axios';
 import { AppSpinner } from '../../components/AppSpinner';
 import useSWRMutation from 'swr/mutation';
 import { fetcher } from '../../utils/fetcher';
+import moment from "moment-timezone";
 
 const deleteFetcher = async (url: string, { arg }: { arg: string }) => {
   try {
@@ -80,6 +81,8 @@ export function Admin() {
             <th scope="col">아이</th>
             <th scope="col">메시지</th>
             <th scope="col">삭제</th>
+            <th scope="col">시간</th>
+            <th scope="col">번호</th>
           </tr>
         </thead>
         <tbody id="target-reload" className="table-group-divider">
@@ -90,7 +93,7 @@ export function Admin() {
               <td>{waiting.children}</td>
               <td>
                 <button
-                  className="btn btn-primary btn-sm"
+                  className="btn btn-primary btn-md"
                   type="button"
                   onClick={(e) => onClickNotice(e, waiting.id)}
                   disabled={noticeMutating}
@@ -132,6 +135,8 @@ export function Admin() {
                   삭제
                 </button>
               </td>
+              <td>{moment(waiting.createdAt).tz('Asia/Seoul').format('HH:mm:ss')}</td>
+              <td>{waiting.phoneNumber}</td>
             </tr>
           ))}
         </tbody>

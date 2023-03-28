@@ -4,6 +4,8 @@ export interface WaitingResponse {
   waitingTurn: number;
   adult: number;
   children: number;
+  phoneNumber: string;
+  createdAt: string;
 }
 
 export interface WaitingCountResponse {
