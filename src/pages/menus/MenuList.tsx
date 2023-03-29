@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import useSWRImmutable from 'swr/immutable';
-import { fetcher } from '../../utils/fetcher';
-import { MenuResponse } from '../../types/menu';
-import { AppSpinner } from '../../components/AppSpinner';
-import { Container, Grid } from '@mui/material';
 import { ShowMenuList } from './ShowMenuList';
+import { MenuResponse } from '../../types/menu';
+import { Container, Grid } from '@mui/material';
+import { getFetcher } from '../../utils/fetcher';
+import { AppSpinner } from '../../components/AppSpinner';
 
 export function MenuList({ categoryId }: { categoryId: number }) {
   const [isMounted, setIsMounted] = useState(false);
   const { data, isLoading } = useSWRImmutable<MenuResponse[]>(
     isMounted ? `/api/menus/category/${categoryId}` : null,
-    fetcher,
+    getFetcher,
   );
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { CategoryResponse } from '../../types/category';
 import { AppBar, Tab, Tabs } from '@mui/material';
+import { CategoryResponse } from '../../types/category';
 
 export function Categories({
   setCategoryId,

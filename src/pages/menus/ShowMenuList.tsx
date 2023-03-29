@@ -1,13 +1,18 @@
+import { IMG } from '../../utils/constants';
 import { MenuResponse } from '../../types/menu';
 import { Card, CardContent, CardMedia, Grid, Typography } from '@mui/material';
-import { IMG } from '../../utils/constants';
 
 const setSpicyLevel = (spicy: number) => {
   if (spicy === 0) return null;
   return new Array(spicy)
     .fill(0)
     .map((level, index) => (
-      <img key={`spicy${index}`} src={IMG.SPICY} style={{ width: '1.5rem', height: '1.1rem' }} alt={`spicy${level}`} />
+      <img
+        key={`spicy${index}`}
+        src={IMG.SPICY}
+        style={{ width: '1.5rem', height: '1.1rem' }}
+        alt={`spicy${level}`}
+      />
     ));
 };
 
@@ -47,7 +52,9 @@ export function ShowMenuList(props: MenuResponse) {
             </>
           </Typography>
           <Typography sx={{ mb: 1, color: 'text.secondary' }}>{description}</Typography>
-          {notice !== 'unused' ? <Typography sx={{ mb: 1, color: 'text.secondary' }}>{notice}</Typography> : null}
+          {notice !== 'unused' ? (
+            <Typography sx={{ mb: 1, color: 'text.secondary' }}>{notice}</Typography>
+          ) : null}
           <Typography align="right">₩ {price.toLocaleString('ko-KR')}</Typography>
         </CardContent>
       </Card>

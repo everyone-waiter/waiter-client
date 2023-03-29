@@ -1,35 +1,12 @@
+import moment from 'moment-timezone';
+import { toast } from 'react-toastify';
+import useSWRMutation from 'swr/mutation';
 import useSWR, { useSWRConfig } from 'swr';
 import { WaitingResponse } from '../../types/waiting';
-import { BaseSyntheticEvent, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import { AppSpinner } from '../../components/AppSpinner';
-import useSWRMutation from 'swr/mutation';
-import { fetcher } from '../../utils/fetcher';
-import moment from "moment-timezone";
-
-const deleteFetcher = async (url: string, { arg }: { arg: string }) => {
-  try {
-    const res = await axios.delete(url + arg, {
-      headers: { 'Content-Type': `application/json` },
-    });
-    return res.data;
-  } catch (e: any) {
-    throw e;
-  }
-};
-
-const noticeFetcher = async (url: string, { arg }: { arg: string }) => {
-  try {
-    const res = await axios.post(url + arg, {
-      headers: { 'Content-Type': `application/json` },
-    });
-    return res.data;
-  } catch (e: any) {
-    throw e;
-  }
-};
+import { useNavigate, useParams } from 'react-router-dom';
+import { BaseSyntheticEvent, useEffect, useState } from 'react';
+import { deleteArgsFetcher, getFetcher, postArgsFetcher } from '../../utils/fetcher';
 
 export function Admin() {
   const navigate = useNavigate();
@@ -37,13 +14,16 @@ export function Admin() {
   const [isMounted, setMounted] = useState(false);
   const { trigger: noticeTrigger, isMutating: noticeMutating } = useSWRMutation(
     `/api/waiting/admin/notice/`,
-    noticeFetcher,
+    postArgsFetcher,
   );
   const { trigger: deleteTrigger, isMutating: deleteMutating } = useSWRMutation(
     `/api/waiting/admin/delete/`,
-    deleteFetcher,
+    deleteArgsFetcher,
   );
-  const { data, isLoading } = useSWR<WaitingResponse[]>(isMounted ? `/api/waiting/admin/${memberId}` : null, fetcher);
+  const { data, isLoading } = useSWR<WaitingResponse[]>(
+    isMounted ? `/api/waiting/admin/${memberId}` : null,
+    getFetcher,
+  );
   const { mutate } = useSWRConfig();
 
   useEffect(() => {
@@ -72,7 +52,7 @@ export function Admin() {
   if (isLoading) return <AppSpinner />;
 
   return (
-    <div className="container col-xl-10 col-xxl-8 px-4 py-5">
+    <>
       <table className="table">
         <thead>
           <tr>
@@ -141,6 +121,6 @@ export function Admin() {
           ))}
         </tbody>
       </table>
-    </div>
+    </>
   );
 }

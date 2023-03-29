@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppSpinner } from '../../components/AppSpinner';
 import { toast } from 'react-toastify';
-import { fetcher } from '../../utils/fetcher';
+import { getFetcher } from '../../utils/fetcher';
 
 export function Turn() {
   const { waitingId } = useParams();
   const navigate = useNavigate();
   const [isMounted, setMounted] = useState(false);
-  const { data, isLoading } = useSWR<WaitingResponse>(isMounted ? `/api/waiting/turn/${waitingId}` : null, fetcher);
+  const { data, isLoading } = useSWR<WaitingResponse>(isMounted ? `/api/waiting/turn/${waitingId}` : null, getFetcher);
 
   useEffect(() => {
     if (!waitingId || waitingId?.length !== 36) {
@@ -20,7 +20,7 @@ export function Turn() {
     setMounted(true);
   }, [waitingId, navigate]);
 
-  if (isLoading) return <AppSpinner />;
+  if (isLoading) return <AppSpinner />
 
   return (
     <div className="container col-xl-10 col-xxl-8 px-4 py-5">

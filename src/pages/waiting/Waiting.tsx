@@ -1,26 +1,12 @@
-import useSWR, { useSWRConfig } from 'swr';
-import useSWRMutation from 'swr/mutation';
-import axios from 'axios';
-import { BaseSyntheticEvent, useEffect, useState } from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
-import { useNavigate, useParams } from 'react-router-dom';
-import { AppSpinner } from '../../components/AppSpinner';
-import { WaitingCountResponse, WaitingRequest } from '../../types/waiting';
 import { toast } from 'react-toastify';
-import { fetcher } from '../../utils/fetcher';
-
-const sendPost = async (url: string, { arg }: { arg: WaitingRequest }) => {
-  const bodyData = JSON.stringify(arg);
-
-  try {
-    const res = await axios.post(url, bodyData, {
-      headers: { 'Content-Type': `application/json` },
-    });
-    return res.data;
-  } catch (e: any) {
-    throw e;
-  }
-};
+import useSWRMutation from 'swr/mutation';
+import useSWR, { useSWRConfig } from 'swr';
+import { Button, Col, Form, Row } from 'react-bootstrap';
+import { AppSpinner } from '../../components/AppSpinner';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getFetcher, postFetcher } from '../../utils/fetcher';
+import { BaseSyntheticEvent, useEffect, useState } from 'react';
+import { WaitingCountResponse, WaitingRequest } from '../../types/waiting';
 
 const formData: WaitingRequest = {
   adult: 0,
@@ -39,8 +25,8 @@ export function Waiting() {
     phoneNumber: '',
     state: false,
   });
-  const { data, isLoading } = useSWR<WaitingCountResponse>(isMounted ? `/api/waiting/${memberId}` : null, fetcher);
-  const { trigger, isMutating } = useSWRMutation(`/api/waiting/${memberId}`, sendPost);
+  const { data, isLoading } = useSWR<WaitingCountResponse>(isMounted ? `/api/waiting/${memberId}` : null, getFetcher);
+  const { trigger, isMutating } = useSWRMutation(`/api/waiting/${memberId}`, postFetcher);
   const { mutate } = useSWRConfig();
 
   useEffect(() => {
@@ -53,7 +39,10 @@ export function Waiting() {
 
   const onChange = (e: BaseSyntheticEvent) => {
     setReqData((cur) => ({ ...cur, [e.target.name]: e.target.value }));
-    setValidError((cur) => ({ ...cur, [e.target.name]: valid(e.target.name, e.target.value) }));
+    setValidError((cur) => ({
+      ...cur,
+      [e.target.name]: valid(e.target.name, e.target.value),
+    }));
   };
 
   const valid = (type: string, value: string | number): string => {
