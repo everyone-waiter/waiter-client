@@ -33,13 +33,14 @@ export function Admin() {
     }
 
     setMounted(true);
-  }, [memberId, navigate, mutate]);
+  }, [memberId, navigate]);
 
   const onClickDelete = async (e: BaseSyntheticEvent, waitingId: string) => {
     e.preventDefault();
     if (window.confirm('삭제하시겠습니까?')) {
       await deleteTrigger(waitingId);
       alert(`삭제가 완료되었습니다.`);
+      await mutate(`/api/waiting/admin/${memberId}`);
     }
   };
 
