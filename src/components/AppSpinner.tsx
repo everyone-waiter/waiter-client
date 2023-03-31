@@ -6,7 +6,7 @@ export function AppSpinner() {
       className="d-flex align-items-center justify-content-center"
       style={{ lineHeight: '100vh', verticalAlign: 'middle' }}
     >
-      <Spinner animation="border" variant="text-secondary" />;
+      <Spinner animation="border" variant="text-secondary" />
     </div>
   );
 }
