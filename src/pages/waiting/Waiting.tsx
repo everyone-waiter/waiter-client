@@ -25,7 +25,10 @@ export function Waiting() {
     phoneNumber: '',
     state: false,
   });
-  const { data, isLoading } = useSWR<WaitingCountResponse>(isMounted ? `/api/waiting/${memberId}` : null, getFetcher);
+  const { data, isLoading } = useSWR<WaitingCountResponse>(
+    isMounted ? `/api/waiting/${memberId}` : null,
+    getFetcher,
+  );
   const { trigger, isMutating } = useSWRMutation(`/api/waiting/${memberId}`, postFetcher);
   const { mutate } = useSWRConfig();
 
@@ -35,7 +38,7 @@ export function Waiting() {
       return navigate('/');
     }
     setMounted(true);
-  }, [memberId, navigate, mutate]);
+  }, [memberId, navigate]);
 
   const onChange = (e: BaseSyntheticEvent) => {
     setReqData((cur) => ({ ...cur, [e.target.name]: e.target.value }));
@@ -60,7 +63,7 @@ export function Waiting() {
     e.preventDefault();
 
     await trigger(reqData);
-    await mutate(`/waiting/${memberId}`);
+    await mutate(`/api/waiting/${memberId}`);
     setReqData(formData);
     alert(`대기열 등록이 완료되었습니다.\n카카오톡을 확인 해 주세요.`);
   };
@@ -136,14 +139,20 @@ export function Waiting() {
               disabled={isMutating || !validError.state}
             >
               {isMutating ? (
-                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
               ) : (
                 '등록하기'
               )}
             </Button>
             <small className="text-muted">카카오 알림톡으로 안내 해 드리고 있어요.</small>
             <hr className="my-4" />
-            <small className="text-muted">좌석 현황 및 인원에 따라 입장 순서에 변동이 생길 수 있어요.</small>
+            <small className="text-muted">
+              좌석 현황 및 인원에 따라 입장 순서에 변동이 생길 수 있어요.
+            </small>
           </Form>
         </Col>
       </Row>
