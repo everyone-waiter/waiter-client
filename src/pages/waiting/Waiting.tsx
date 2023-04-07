@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 import useSWRMutation from 'swr/mutation';
 import useSWR, { useSWRConfig } from 'swr';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { AppSpinner } from '../../components/AppSpinner';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getFetcher, postFetcher } from '../../utils/fetcher';
@@ -17,6 +17,7 @@ const formData: WaitingRequest = {
 export function Waiting() {
   const { memberId } = useParams();
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
   const [isMounted, setMounted] = useState(false);
   const [reqData, setReqData] = useState(formData);
   const [validError, setValidError] = useState({
@@ -39,6 +40,12 @@ export function Waiting() {
     }
     setMounted(true);
   }, [memberId, navigate]);
+
+  const handleClose = () => setShow(false);
+  const handleShow = (e: BaseSyntheticEvent) => {
+    e.preventDefault();
+    setShow(true);
+  };
 
   const onChange = (e: BaseSyntheticEvent) => {
     setReqData((cur) => ({ ...cur, [e.target.name]: e.target.value }));
@@ -65,6 +72,7 @@ export function Waiting() {
     await trigger(reqData);
     await mutate(`/api/waiting/${memberId}`);
     setReqData(formData);
+    setShow(false);
     alert(`대기열 등록이 완료되었습니다.\n카카오톡을 확인 해 주세요.`);
   };
 
@@ -82,7 +90,7 @@ export function Waiting() {
           </p>
         </Col>
         <Col md={10} lg={5} className="mx-auto">
-          <Form className="p-4 p-md-5 border rounded-3 bg-light" onSubmit={onSubmit}>
+          <Form className="p-4 p-md-5 border rounded-3 bg-light" onSubmit={handleShow}>
             <p className="col-lg-10 fs-4">인원 수와 휴대폰 번호를 입력 해 주세요.</p>
             <Form.Floating className="mb-3">
               <Form.Control
@@ -156,6 +164,30 @@ export function Waiting() {
           </Form>
         </Col>
       </Row>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>휴대폰 번호 확인</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <strong style={{ color: 'red', fontSize: '1.2rem' }}>
+            {reqData.phoneNumber}
+          </strong>
+          으로 알림톡을 받으시겠어요?
+        </Modal.Body>
+        <Modal.Body>
+          <strong>
+            * 휴대폰 번호를 잘 못 입력하셔서 생기는 문제가 많으니 확인 부탁드려요.
+          </strong>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            취소
+          </Button>
+          <Button variant="primary" onClick={onSubmit}>
+            보내기
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
