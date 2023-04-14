@@ -57,7 +57,9 @@ export function Waiting() {
 
   const valid = (type: string, value: string | number): string => {
     if (type !== 'phoneNumber') {
-      return value >= 0 ? '' : '인원은 0명 이상이어야 합니다.';
+      return Number(value) >= 0 && Number(value) <= 20
+        ? ''
+        : '인원은 0명 이상 20명 이하여야 합니다.';
     }
 
     const regexp = /(01[016789]{1})[0-9]{4}[0-9]{4}$/;
