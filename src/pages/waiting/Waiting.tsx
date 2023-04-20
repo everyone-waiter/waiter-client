@@ -182,10 +182,10 @@ export function Waiting() {
           </strong>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleClose} disabled={isMutating}>
             취소
           </Button>
-          <Button variant="primary" onClick={onSubmit}>
+          <Button variant="primary" onClick={onSubmit} disabled={isMutating}>
             보내기
           </Button>
         </Modal.Footer>
